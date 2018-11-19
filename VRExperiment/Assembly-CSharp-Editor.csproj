@@ -215,7 +215,7 @@
      <None Include="Assets\Table and chair\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendForBloom.shader" />
      <None Include="Assets\Oculus\VR\Plugins\placeholder.txt" />
  <Reference Include="Assembly-UnityScript">
- <HintPath>E:/SeniorProject/VRExperiment/Library/ScriptAssemblies/Assembly-UnityScript.dll</HintPath>
+ <HintPath>E:/SeniorProject/SeniorProject/VRExperiment/Library/ScriptAssemblies/Assembly-UnityScript.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
@@ -275,10 +275,10 @@
  <HintPath>D:/Unity/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
  <Reference Include="TextMeshPro-5.6-Editor">
- <HintPath>E:/SeniorProject/VRExperiment/Assets/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Editor.dll</HintPath>
+ <HintPath>E:/SeniorProject/SeniorProject/VRExperiment/Assets/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Editor.dll</HintPath>
  </Reference>
  <Reference Include="TextMeshPro-5.6-Runtime">
- <HintPath>E:/SeniorProject/VRExperiment/Assets/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Runtime.dll</HintPath>
+ <HintPath>E:/SeniorProject/SeniorProject/VRExperiment/Assets/TextMesh Pro/Plugins/Editor DLL/TextMeshPro-5.6-Runtime.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

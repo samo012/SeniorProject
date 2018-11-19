@@ -135,7 +135,6 @@ public class OVRGrabber : MonoBehaviour
     // your hands or held objects, you may wish to switch to parenting.
     void OnUpdatedAnchors()
     {
-		float multiplier = 1.5f;
         Vector3 handPos = OVRInput.GetLocalControllerPosition(m_controller);
         Quaternion handRot = OVRInput.GetLocalControllerRotation(m_controller);
 		Vector3 destPos = m_parentTransform.TransformPoint(m_anchorOffsetPosition + handPos);
@@ -307,7 +306,6 @@ public class OVRGrabber : MonoBehaviour
         {
             return;
         }
-		float mult = 1.2f;
         Rigidbody grabbedRigidbody = m_grabbedObj.grabbedRigidbody;
 		Vector3 grabbablePosition = pos + rot * m_grabbedObjectPosOff;
         Quaternion grabbableRotation = rot * m_grabbedObjectRotOff;

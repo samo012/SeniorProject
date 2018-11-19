@@ -4,35 +4,23 @@ using UnityEngine;
 
 public class vSpeed : MonoBehaviour {
 
-	public OVRPlayerController player;
-	public float speed =0.1f;
+	public float _Velocity = 0.0f;      // Current Travelling Velocity
+	public float _MaxVelocity = 10.0f;   // Maxima Velocity
+	public float _Acc = 0.0f;           // Current Acceleration
+	public float _AccSpeed = 0.1f;      // Amount to increase Acceleration with.
+	public float _MaxAcc = 1.0f;        // Max Acceleration
+	public float _MinAcc = -1.0f;       // Min Acceleration
+
 	void Start()
 	{
-		player.GetComponent<OVRPlayerController> ().Acceleration = speed;
-		Time.timeScale=2.0f;
 
 
 	}
 
   void FixedUpdate ()
   {
-		player.GetComponent<OVRPlayerController> ().Acceleration = speed;
-		if(OVRInput.Get(OVRInput.Button.PrimaryThumbstickUp))
-      {
-			speed = speed + 0.1f;
 
-      }
-		else if (OVRInput.Get(OVRInput.Button.PrimaryThumbstickDown))
-      {
-			speed = speed - 0.1f;
-      }
-  
-
-
-      if (OVRInput.Get(OVRInput.Button.One)){
-			Debug.Log(speed);
-      }
-
+		string yo = "OvrAvatar.cs 305";
       
   }
 }

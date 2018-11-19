@@ -297,19 +297,30 @@ public class OvrAvatar : MonoBehaviour
         Quaternion orientation = transform.orientation;
         orientation.x = -orientation.x;
         orientation.y = -orientation.y;
-        target.localPosition = position;
+		target.localPosition = position;
         target.localRotation = orientation;
         target.localScale = transform.scale;
     }
 
     public static ovrAvatarTransform CreateOvrAvatarTransform(Vector3 position, Quaternion orientation)
     {
-        return new ovrAvatarTransform
-        {
-            position = new Vector3(position.x, position.y, -position.z),
-            orientation = new Quaternion(-orientation.x, -orientation.y, orientation.z, orientation.w),
-            scale = Vector3.one
-        };
+		float multiplier = 4.0f;
+		float max = 10.0f;
+		/*while (multiplier < max) {
+
+			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickUp)) {
+				multiplier += multiplier;
+			}
+			if (OVRInput.Get (OVRInput.Button.One)) {
+				Debug.Log (multiplier);
+			}
+		}
+		*/
+			return new ovrAvatarTransform {
+			position = new Vector3 (position.x*multiplier, position.y, -position.z),
+				orientation = new Quaternion (-orientation.x, -orientation.y, orientation.z, orientation.w),
+				scale = Vector3.one
+			};
     }
 
     private void RemoveAvatarComponent(string name)
