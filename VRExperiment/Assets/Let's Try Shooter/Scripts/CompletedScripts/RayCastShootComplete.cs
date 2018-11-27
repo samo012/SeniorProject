@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class RayCastShootComplete : MonoBehaviour {
 
@@ -14,6 +15,11 @@ public class RayCastShootComplete : MonoBehaviour {
 	private AudioSource gunAudio;										// Reference to the audio source which will play our shooting sound effect
 	private LineRenderer laserLine;										// Reference to the LineRenderer component which will display our laserline
 	private float nextFire;												// Float to store the time the player will be allowed to fire again, after firing
+	float timer = 0f;
+	int counter = 0;
+	bool timerRunning = false;
+	public Text timerLabel;
+
 
 
 	void Start () 
@@ -24,12 +30,22 @@ public class RayCastShootComplete : MonoBehaviour {
 		// Get and store a reference to our AudioSource component
 		gunAudio = GetComponent<AudioSource>();
 
+
+
+		counter = 0;
+
 		// Get and store a reference to our Camera by searching this GameObject and its parents
 	}
-	
+
 
 	void Update () 
 	{
+		if (counter > 0 && counter < 8) {
+			startTimer ();
+			timerLabel.text = "Timer: " + timer.ToString("F2");
+		} else
+			endTimer ();
+
 		// Check if the player has pressed the fire button and if enough time has elapsed since they last fired
 		if (OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger)){
 			if (Time.time > nextFire) 
@@ -46,10 +62,14 @@ public class RayCastShootComplete : MonoBehaviour {
 
 			// Set the start position for our visual effect for our laser to the position of gunEnd
 			laserLine.SetPosition (0, gunEnd.position);
+			
+			
 
 			// Check if our raycast has hit anything
-				if (Physics.Raycast (fpsCam.position, fpsCam.transform.forward, out hit, weaponRange))
+				if (Physics.Raycast (fpsCam.position, fpsCam.transform.forward, out hit, weaponRange) && hit.transform.tag == "Shootable")
 			{
+					counter++;
+
 				// Set the end position for our laser line 
 				laserLine.SetPosition (1, hit.point);
 
@@ -75,9 +95,20 @@ public class RayCastShootComplete : MonoBehaviour {
 				// If we did not hit anything, set the end of the line to a position directly in front of the camera at the distance of weaponRange
 					laserLine.SetPosition (1, fpsCam.position + (fpsCam.transform.forward * weaponRange));
 			}
+			}
 		}
 	}
-			}
+
+	void startTimer()
+	{
+		timer += Time.deltaTime;
+	}
+	void endTimer()
+	{
+		Debug.Log (timer);
+	}
+
+
 
 
 

@@ -77,6 +77,9 @@ public class OvrAvatar : MonoBehaviour
     public string oculusUserID;
     internal UInt64 oculusUserIDInternal;
 
+	public static float multiplier = 1.0f;
+	public static float max = 8.0f;
+
 #if UNITY_ANDROID && UNITY_5_5_OR_NEWER && !UNITY_EDITOR
     bool CombineMeshes = true;
 #else
@@ -304,18 +307,6 @@ public class OvrAvatar : MonoBehaviour
 
     public static ovrAvatarTransform CreateOvrAvatarTransform(Vector3 position, Quaternion orientation)
     {
-		float multiplier = 4.0f;
-		float max = 10.0f;
-		/*while (multiplier < max) {
-
-			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickUp)) {
-				multiplier += multiplier;
-			}
-			if (OVRInput.Get (OVRInput.Button.One)) {
-				Debug.Log (multiplier);
-			}
-		}
-		*/
 			return new ovrAvatarTransform {
 			position = new Vector3 (position.x*multiplier, position.y, -position.z),
 				orientation = new Quaternion (-orientation.x, -orientation.y, orientation.z, orientation.w),
@@ -502,7 +493,7 @@ public class OvrAvatar : MonoBehaviour
         for (int i = 0; i < joints.Length; ++i)
         {
             Transform joint = joints[i];
-            ovrAvatarTransform transform = CreateOvrAvatarTransform(joint.localPosition, joint.localRotation);
+			ovrAvatarTransform transform = CreateOvrAvatarTransform(joint.localPosition, joint.localRotation);
             if (transform.position != transforms[i].position || transform.orientation != transforms[i].orientation)
             {
                 transforms[i] = transform;
@@ -602,6 +593,7 @@ public class OvrAvatar : MonoBehaviour
 
         WaitingForCombinedMesh = CombineMeshes;
         Driver.Mode = UseSDKPackets ? OvrAvatarDriver.PacketMode.SDK : OvrAvatarDriver.PacketMode.Unity;
+		multiplier = 1;
     }
 
     void Update()
@@ -614,6 +606,7 @@ public class OvrAvatar : MonoBehaviour
         if (Driver != null)
         {
            Driver.UpdateTransforms(sdkAvatar);
+
 
             foreach (float[] voiceUpdate in voiceUpdates)
             {
@@ -641,6 +634,20 @@ public class OvrAvatar : MonoBehaviour
                 assetsFinishedLoading = true;
             }
         }
+
+		if (multiplier >= 0 && multiplier < max) {
+
+			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickUp)) {
+				multiplier += 0.1f;
+			}
+			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickDown)) {
+				multiplier -= 0.1f;
+			}
+			if (OVRInput.Get (OVRInput.Button.One)) {
+				Debug.Log (multiplier);
+			}
+		} 
+
     }
 
     public static ovrAvatarHandInputState CreateInputState(ovrAvatarTransform transform, OvrAvatarDriver.ControllerPose pose)

@@ -67,6 +67,10 @@ public class OVRGrabber : MonoBehaviour
 	protected Dictionary<OVRGrabbable, int> m_grabCandidates = new Dictionary<OVRGrabbable, int>();
 	protected bool operatingWithoutOVRCameraRig = true;
 
+
+	public static float multiplier = 1.0f;
+	public static float max = 8.0f;
+
     /// <summary>
     /// The currently grabbed object.
     /// </summary>
@@ -128,6 +132,19 @@ public class OVRGrabber : MonoBehaviour
 	{
 		if (operatingWithoutOVRCameraRig)
 			OnUpdatedAnchors();
+
+		if (multiplier >= 0 && multiplier < max) {
+
+			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickUp)) {
+				multiplier += 0.1f;
+			}
+			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickDown)) {
+				multiplier -= 0.1f;
+			}
+			if (OVRInput.Get (OVRInput.Button.One)) {
+				Debug.Log (multiplier);
+			}
+		} 
 	}
 
     // Hands follow the touch anchors by calling MovePosition each frame to reach the anchor.
@@ -135,7 +152,7 @@ public class OVRGrabber : MonoBehaviour
     // your hands or held objects, you may wish to switch to parenting.
     void OnUpdatedAnchors()
     {
-        Vector3 handPos = OVRInput.GetLocalControllerPosition(m_controller);
+		Vector3 handPos = OVRInput.GetLocalControllerPosition(m_controller);
         Quaternion handRot = OVRInput.GetLocalControllerRotation(m_controller);
 		Vector3 destPos = m_parentTransform.TransformPoint(m_anchorOffsetPosition + handPos);
 		Quaternion destRot = m_parentTransform.rotation * handRot * m_anchorOffsetRotation;
@@ -306,9 +323,11 @@ public class OVRGrabber : MonoBehaviour
         {
             return;
         }
+
         Rigidbody grabbedRigidbody = m_grabbedObj.grabbedRigidbody;
 		Vector3 grabbablePosition = pos + rot * m_grabbedObjectPosOff;
         Quaternion grabbableRotation = rot * m_grabbedObjectRotOff;
+		grabbablePosition = new Vector3 (pos.x * multiplier, pos.y, pos.z);
 
         if (forceTeleport)
         {
