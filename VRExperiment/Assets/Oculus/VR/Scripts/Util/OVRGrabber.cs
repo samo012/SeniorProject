@@ -141,7 +141,7 @@ public class OVRGrabber : MonoBehaviour
 			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickDown)) {
 				multiplier -= 0.1f;
 			}
-			if (OVRInput.Get (OVRInput.Button.One)) {
+			if (OVRInput.GetDown (OVRInput.Button.One)) {
 				Debug.Log (multiplier);
 			}
 		} 

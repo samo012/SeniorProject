@@ -4,33 +4,29 @@ using UnityEngine;
 
 public class CamSwitch : MonoBehaviour {
 
-	public GameObject S1Cam, S2Cam, S3Cam;
+	public GameObject cam1;
+	public GameObject cam2;
+	public GameObject cam3;
 
-	int curCam = 1;
 
-	void Update()
-	{
-		if (OVRInput.GetDown(OVRInput.Button.One))
-		{
-			
-			if (curCam == 1){
-				S1Cam.gameObject.SetActive(true);
-				S2Cam.gameObject.SetActive(false);
-				S3Cam.gameObject.SetActive(false);
-				curCam = 2;
-			}
-			if (curCam == 2){
-				S1Cam.gameObject.SetActive(false);
-				S2Cam.gameObject.SetActive(true);
-				S3Cam.gameObject.SetActive(false);
-			}
-			if (curCam == 3){
-				S1Cam.gameObject.SetActive(false);
-				S2Cam.gameObject.SetActive(false);
-				S3Cam.gameObject.SetActive(true);
-				curCam = 0;
-			}
+	void Start() {
+		cam1.SetActive (true);
+		cam2.SetActive (false);
+		cam3.SetActive (false);
+	}
+
+	void Update() {
+
+		if (OVRInput.Get(OVRInput.Button.One) && cam1.activeSelf == true) {
+			cam1.SetActive (false);
+			cam2.SetActive (true);
+			cam3.SetActive (false);
+		}
+		else if (OVRInput.Get(OVRInput.Button.One) && cam2.activeSelf == true) {
+			cam1.SetActive (false);
+			cam2.SetActive (false);
+			cam3.SetActive (true);
 		}
 	}
-}
 
+}

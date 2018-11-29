@@ -643,7 +643,7 @@ public class OvrAvatar : MonoBehaviour
 			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickDown)) {
 				multiplier -= 0.1f;
 			}
-			if (OVRInput.Get (OVRInput.Button.One)) {
+			if (OVRInput.Get (OVRInput.Button.SecondaryThumbstick)) {
 				Debug.Log (multiplier);
 			}
 		} 
