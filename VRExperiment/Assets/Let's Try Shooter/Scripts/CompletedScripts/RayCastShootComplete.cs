@@ -17,7 +17,6 @@ public class RayCastShootComplete : MonoBehaviour {
 	private float nextFire;												// Float to store the time the player will be allowed to fire again, after firing
 	float timer = 0f;
 	int counter = 0;
-	bool timerRunning = false;
 	public Text timerLabel;
 
 
@@ -66,7 +65,7 @@ public class RayCastShootComplete : MonoBehaviour {
 			
 
 			// Check if our raycast has hit anything
-				if (Physics.Raycast (fpsCam.position, fpsCam.transform.forward, out hit, weaponRange) && hit.transform.tag == "Shootable")
+				if (Physics.Raycast (gunEnd.position, gunEnd.transform.forward, out hit, weaponRange) && hit.transform.tag == "Shootable")
 			{
 					counter++;
 
@@ -93,7 +92,7 @@ public class RayCastShootComplete : MonoBehaviour {
 			else
 			{
 				// If we did not hit anything, set the end of the line to a position directly in front of the camera at the distance of weaponRange
-					laserLine.SetPosition (1, fpsCam.position + (fpsCam.transform.forward * weaponRange));
+					laserLine.SetPosition (1, gunEnd.position + (gunEnd.transform.forward * weaponRange));
 			}
 			}
 		}
@@ -105,7 +104,7 @@ public class RayCastShootComplete : MonoBehaviour {
 	}
 	void endTimer()
 	{
-		Debug.Log (timer);
+		
 	}
 
 

@@ -77,8 +77,18 @@ public class OvrAvatar : MonoBehaviour
     public string oculusUserID;
     internal UInt64 oculusUserIDInternal;
 
-	public static float multiplier = 1.0f;
-	public static float max = 8.0f;
+	public static float dft = 1.0f;
+	public static float multiplier = dft;
+	public static float max = 4.0f;
+	public static float min = 0.01f;
+	public static float xMult = dft;
+	public static float yMult = dft;
+	public static float zMult = dft;
+	public static bool xPressed = true;
+	public static bool yPressed = false;
+	public static bool zPressed = false;
+
+
 
 #if UNITY_ANDROID && UNITY_5_5_OR_NEWER && !UNITY_EDITOR
     bool CombineMeshes = true;
@@ -308,7 +318,7 @@ public class OvrAvatar : MonoBehaviour
     public static ovrAvatarTransform CreateOvrAvatarTransform(Vector3 position, Quaternion orientation)
     {
 			return new ovrAvatarTransform {
-			position = new Vector3 (position.x*multiplier, position.y, -position.z),
+			position = new Vector3 (position.x*xMult, position.y*yMult, -position.z*zMult),
 				orientation = new Quaternion (-orientation.x, -orientation.y, orientation.z, orientation.w),
 				scale = Vector3.one
 			};
@@ -493,7 +503,8 @@ public class OvrAvatar : MonoBehaviour
         for (int i = 0; i < joints.Length; ++i)
         {
             Transform joint = joints[i];
-			ovrAvatarTransform transform = CreateOvrAvatarTransform(joint.localPosition, joint.localRotation);
+			Vector3 yo = new Vector3 (joint.position.x * xMult, joint.position.y * yMult, -joint.position.z * zMult);
+			ovrAvatarTransform transform = CreateOvrAvatarTransform(yo, joint.localRotation);
             if (transform.position != transforms[i].position || transform.orientation != transforms[i].orientation)
             {
                 transforms[i] = transform;
@@ -593,60 +604,122 @@ public class OvrAvatar : MonoBehaviour
 
         WaitingForCombinedMesh = CombineMeshes;
         Driver.Mode = UseSDKPackets ? OvrAvatarDriver.PacketMode.SDK : OvrAvatarDriver.PacketMode.Unity;
-		multiplier = 1;
+		multiplier = min;
+		xMult = min;
+		yMult = dft;
+		zMult = dft;
     }
 
     void Update()
-    {
-        if (sdkAvatar == IntPtr.Zero)
-        {
-            return;
-        }
+	{
+		if (sdkAvatar == IntPtr.Zero) {
+			return;
+		}
 
-        if (Driver != null)
-        {
-           Driver.UpdateTransforms(sdkAvatar);
+		if (Driver != null) {
+			Driver.UpdateTransforms (sdkAvatar);
 
 
-            foreach (float[] voiceUpdate in voiceUpdates)
-            {
-                CAPI.ovrAvatarPose_UpdateVoiceVisualization(sdkAvatar, voiceUpdate);
-            }
-
-            voiceUpdates.Clear();
-
-            CAPI.ovrAvatarPose_Finalize(sdkAvatar, Time.deltaTime);
-        }
-
-        if (RecordPackets)
-        {
-            RecordFrame();
-        }
-
-        if (assetLoadingIds.Count == 0)
-        {
-            UpdateSDKAvatarUnityState();
-            UpdateCustomPoses();
-
-            if (!assetsFinishedLoading)
-            {
-                AssetsDoneLoading.Invoke();
-                assetsFinishedLoading = true;
-            }
-        }
-
-		if (multiplier >= 0 && multiplier < max) {
-
-			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickUp)) {
-				multiplier += 0.1f;
+			foreach (float[] voiceUpdate in voiceUpdates) {
+				CAPI.ovrAvatarPose_UpdateVoiceVisualization (sdkAvatar, voiceUpdate);
 			}
-			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickDown)) {
-				multiplier -= 0.1f;
+
+			voiceUpdates.Clear ();
+
+			CAPI.ovrAvatarPose_Finalize (sdkAvatar, Time.deltaTime);
+		}
+
+		if (RecordPackets) {
+			RecordFrame ();
+		}
+
+		if (assetLoadingIds.Count == 0) {
+			UpdateSDKAvatarUnityState ();
+			UpdateCustomPoses ();
+
+			if (!assetsFinishedLoading) {
+				AssetsDoneLoading.Invoke ();
+				assetsFinishedLoading = true;
 			}
-			if (OVRInput.Get (OVRInput.Button.SecondaryThumbstick)) {
-				Debug.Log (multiplier);
+		}
+		checkMultiplier ();
+	}
+	void checkMultiplier(){
+		if (Input.GetKeyDown (KeyCode.Keypad0)) {
+			if (xPressed)
+				Debug.Log ("X: " + xMult);
+			else if (yPressed)
+				Debug.Log ("Y: " + yMult);
+			else if (zPressed)
+				Debug.Log ("Z: " + zMult);
+		}
+
+		if (multiplier >= 0 && multiplier <= max) {
+
+			if (Input.GetKeyDown (KeyCode.UpArrow)) {
+				multiplier += 0.05f;
+				if (xPressed)
+					xMult = multiplier;
+				else if (yPressed)
+					yMult = multiplier;
+				else if (zPressed)
+					zMult = multiplier;
 			}
-		} 
+			if (Input.GetKeyDown (KeyCode.DownArrow)) {
+				multiplier -= 0.05f;
+				if (xPressed)
+					xMult = multiplier;
+				else if (yPressed)
+					yMult = multiplier;
+				else if (zPressed)
+					zMult = multiplier;
+			}
+	
+			if (Input.GetKeyDown (KeyCode.X)) {
+				xPressed = true;
+				yPressed = false;
+				zPressed = false;
+				xMult = min;
+				yMult = dft;
+				zMult = dft;
+			}
+			if (Input.GetKeyDown (KeyCode.Y)) {
+				xPressed = false;
+				yPressed = true;
+				zPressed = false;
+				xMult = dft;
+				yMult = min;
+				zMult = dft;
+			}
+			if (Input.GetKeyDown (KeyCode.Z)) {
+				xPressed = false;
+				yPressed = false;
+				zPressed = true;
+				yMult = dft;
+				xMult = dft;
+				zMult = min;
+			}
+			if (Input.GetKeyDown (KeyCode.Keypad1)) {
+				multiplier = min;
+				xMult = min;
+				yMult = min;
+				zMult = min;
+			}
+			if (Input.GetKeyDown (KeyCode.Keypad3)) {
+				multiplier = max;
+				xMult = max;
+				yMult = max;
+				zMult = max;
+			}
+			if (Input.GetKeyDown (KeyCode.Keypad2)) {
+				multiplier = dft;
+				xMult = dft;
+				yMult = dft;
+				zMult = dft;
+			}
+				
+		} else
+			multiplier = min;
 
     }
 

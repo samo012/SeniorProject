@@ -67,9 +67,16 @@ public class OVRGrabber : MonoBehaviour
 	protected Dictionary<OVRGrabbable, int> m_grabCandidates = new Dictionary<OVRGrabbable, int>();
 	protected bool operatingWithoutOVRCameraRig = true;
 
-
-	public static float multiplier = 1.0f;
-	public static float max = 8.0f;
+	public static float dft = 1.0f;
+	public static float multiplier = dft;
+	public static float max = 4.0f;
+	public static float min = 0.01f;
+	public static float xMult = dft;
+	public static float yMult = dft;
+	public static float zMult = dft;
+	public static bool xPressed = false;
+	public static bool yPressed = false;
+	public static bool zPressed = false;
 
     /// <summary>
     /// The currently grabbed object.
@@ -113,6 +120,12 @@ public class OVRGrabber : MonoBehaviour
     {
         m_lastPos = transform.position;
         m_lastRot = transform.rotation;
+
+		multiplier = dft;
+		xMult = dft;
+		yMult = dft;
+		zMult = dft;
+
         if(m_parentTransform == null)
         {
             if(gameObject.transform.parent != null)
@@ -131,20 +144,85 @@ public class OVRGrabber : MonoBehaviour
 	void FixedUpdate()
 	{
 		if (operatingWithoutOVRCameraRig)
-			OnUpdatedAnchors();
+			OnUpdatedAnchors ();
+		checkMultiplier ();
+		
+	}
+	void checkMultiplier(){
+		if (Input.GetKeyDown (KeyCode.Keypad0)) {
+			if (xPressed)
+				Debug.Log ("X: " + xMult);
+			else if (yPressed)
+				Debug.Log ("Y: " + yMult);
+			else if (zPressed)
+				Debug.Log ("Z: " + zMult);
+		}
 
-		if (multiplier >= 0 && multiplier < max) {
+		if (multiplier >= 0 && multiplier <= max) {
 
-			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickUp)) {
-				multiplier += 0.1f;
+			if (Input.GetKeyDown (KeyCode.UpArrow)) {
+				multiplier += 0.05f;
+				if (xPressed)
+					xMult = multiplier;
+				else if (yPressed)
+					yMult = multiplier;
+				else if (zPressed)
+					zMult = multiplier;
 			}
-			if (OVRInput.Get (OVRInput.Button.PrimaryThumbstickDown)) {
-				multiplier -= 0.1f;
+			if (Input.GetKeyDown (KeyCode.DownArrow)) {
+				multiplier -= 0.05f;
+				if (xPressed)
+					xMult = multiplier;
+				else if (yPressed)
+					yMult = multiplier;
+				else if (zPressed)
+					zMult = multiplier;
 			}
-			if (OVRInput.GetDown (OVRInput.Button.One)) {
-				Debug.Log (multiplier);
+
+			if (Input.GetKeyDown (KeyCode.X)) {
+				xPressed = true;
+				yPressed = false;
+				zPressed = false;
+				yMult = dft;
+				zMult = dft;
 			}
-		} 
+			if (Input.GetKeyDown (KeyCode.Y)) {
+				xPressed = false;
+				yPressed = true;
+				zPressed = false;
+				xMult = dft;
+				yMult = min;
+				zMult = dft;
+			}
+			if (Input.GetKeyDown (KeyCode.Z)) {
+				xPressed = false;
+				yPressed = false;
+				zPressed = true;
+				yMult = dft;
+				xMult = dft;
+			}
+			if (Input.GetKeyDown (KeyCode.Keypad1)) {
+				multiplier = min;
+				xMult = min;
+				yMult = min;
+				zMult = min;
+			}
+			if (Input.GetKeyDown (KeyCode.Keypad2)) {
+				multiplier = max;
+				xMult = max;
+				yMult = max;
+				zMult = max;
+			}
+			if (Input.GetKeyDown (KeyCode.Keypad3)) {
+				multiplier = dft;
+				xMult = dft;
+				yMult = dft;
+				zMult = dft;
+			}
+
+		} else
+			multiplier = min;
+
 	}
 
     // Hands follow the touch anchors by calling MovePosition each frame to reach the anchor.
@@ -327,7 +405,7 @@ public class OVRGrabber : MonoBehaviour
         Rigidbody grabbedRigidbody = m_grabbedObj.grabbedRigidbody;
 		Vector3 grabbablePosition = pos + rot * m_grabbedObjectPosOff;
         Quaternion grabbableRotation = rot * m_grabbedObjectRotOff;
-		grabbablePosition = new Vector3 (pos.x * multiplier, pos.y, pos.z);
+		grabbablePosition = new Vector3 (pos.x * xMult, pos.y*yMult, pos.z*zMult);
 
         if (forceTeleport)
         {
