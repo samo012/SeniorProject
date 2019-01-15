@@ -642,7 +642,7 @@ public class OvrAvatar : MonoBehaviour
 				assetsFinishedLoading = true;
 			}
 		}
-		checkMultiplier ();
+		checkMultiplier();
 	}
 	void checkMultiplier(){
 		if (Input.GetKeyDown (KeyCode.Keypad0)) {
