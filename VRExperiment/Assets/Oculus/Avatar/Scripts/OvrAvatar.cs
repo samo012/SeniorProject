@@ -605,7 +605,7 @@ public class OvrAvatar : MonoBehaviour
         WaitingForCombinedMesh = CombineMeshes;
         Driver.Mode = UseSDKPackets ? OvrAvatarDriver.PacketMode.SDK : OvrAvatarDriver.PacketMode.Unity;
 		multiplier = min;
-		xMult = min;
+		xMult = dft;
 		yMult = dft;
 		zMult = dft;
     }

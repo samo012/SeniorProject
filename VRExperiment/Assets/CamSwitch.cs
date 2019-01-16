@@ -6,32 +6,21 @@ public class CamSwitch : MonoBehaviour {
 
 	public GameObject cam1;
 	public GameObject cam2;
-	public GameObject cam3;
+	public bool camSwitch = false;
+
 
 
 	void Start() {
-		cam1.SetActive (true);
-		cam2.SetActive (false);
-		cam3.SetActive (false);
+
 	}
 
 	void Update() {
 
-		if (Input.GetKeyDown (KeyCode.Keypad4)) {
-			cam1.SetActive (true);
-			cam2.SetActive (false);
-			cam3.SetActive (false);
-		}
-		else if (Input.GetKeyDown (KeyCode.Keypad5)) {
-			cam1.SetActive (false);
-			cam2.SetActive (true);
-			cam3.SetActive (false);
-		}
-		else if (Input.GetKeyDown (KeyCode.Keypad6)) {
-			cam1.SetActive (false);
-			cam2.SetActive (false);
-			cam3.SetActive (true);
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			camSwitch = !camSwitch;
+			cam1.SetActive(camSwitch);
+			cam2.SetActive(!camSwitch);
+
 		}
 	}
-
 }
