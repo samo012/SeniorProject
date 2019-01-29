@@ -1,0 +1,43 @@
+fileFormatVersion: 2
+guid: c01e4ece06149ef43903a5fc942a3499
+timeCreated: 1547594244
+licenseType: Free
+PluginImporter:
+  serializedVersion: 2
+  iconMap: {}
+  executionOrder: {}
+  isPreloaded: 0
+  isOverridable: 0
+  platformData:
+    data:
+      first:
+        '': Editor
+      second:
+        enabled: 0
+        settings:
+          CPU: X86_64
+          OS: Windows
+    data:
+      first:
+        Any: 
+      second:
+        enabled: 0
+        settings: {}
+    data:
+      first:
+        Editor: Editor
+      second:
+        enabled: 1
+        settings:
+          CPU: X86_64
+          DefaultValueInitialized: true
+          OS: Windows
+    data:
+      first:
+        Standalone: Win64
+      second:
+        enabled: 1
+        settings: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
